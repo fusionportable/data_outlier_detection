@@ -23,6 +23,7 @@ double latest_frame_cam00_time = 0.0;
 double latest_frame_cam01_time = 0.0;
 double latest_imu_time = 0.0;
 double latest_gps_time = 0.0;
+double latest_gps_3dm_time = 0.0;
 // ******************************
 
 void LiDARCallback(const sensor_msgs::PointCloud2ConstPtr& msg) {
@@ -43,6 +44,10 @@ void IMUCallback(const sensor_msgs::ImuConstPtr& msg) {
 
 void GPSCallback(const sensor_msgs::NavSatFixConstPtr& msg) {
   latest_gps_time = msg->header.stamp.toSec();
+}
+
+void GPS3DMCallback(const sensor_msgs::NavSatFixConstPtr& msg) {
+  latest_gps_3dm_time = msg->header.stamp.toSec();
 }
 
 void CheckData(const double& curr_time, const double sensor_time,
@@ -138,6 +143,48 @@ int main(int argc, char** argv) {
         CheckData(latest_frame_cam01_time, latest_curr_time, "frame_cam01");
         CheckData(latest_imu_time, latest_curr_time, "imu");
         CheckData(latest_gps_time, latest_curr_time, "gps");
+      }
+      loop_rate.sleep();
+    }
+  } else if (argc == 7) {
+    std::cout << "Having GPS and 3DM data";
+    std::string topic1(argv[1]);
+    std::string topic2(argv[2]);
+    std::string topic3(argv[3]);
+    std::string topic4(argv[4]);
+    std::string topic5(argv[5]);
+    std::string topic6(argv[6]);
+    std::cout << "Topic lists: " << std::endl;
+    std::cout << "--- lidar topic: " << topic1 << std::endl;
+    std::cout << "--- frame_cam00 topic: " << topic2 << std::endl;
+    std::cout << "--- frame_cam01 topic: " << topic3 << std::endl;
+    std::cout << "--- imu topic: " << topic4 << std::endl;
+    std::cout << "--- gps topic: " << topic5 << std::endl;
+    std::cout << "--- 3dm topic: " << topic6 << std::endl;
+
+    // clang-format off
+    ros::Subscriber lidar_sub = nh.subscribe<sensor_msgs::PointCloud2>(topic1, 5, LiDARCallback);
+    ros::Subscriber frame_cam00_sub = nh.subscribe<sensor_msgs::CompressedImage>(topic2, 5, FrameCam00Callback);
+    ros::Subscriber frame_cam01_sub = nh.subscribe<sensor_msgs::CompressedImage>(topic3, 5, FrameCam01Callback);
+    ros::Subscriber imu_sub = nh.subscribe<sensor_msgs::Imu>(topic4, 5, IMUCallback);
+    ros::Subscriber gps_sub = nh.subscribe<sensor_msgs::NavSatFix>(topic5, 5, GPSCallback);
+    ros::Subscriber gps_3dm_sub = nh.subscribe<sensor_msgs::NavSatFix>(topic6, 5, GPS3DMCallback);
+    // clang-format on
+
+    double latest_curr_time = ros::Time::now().toSec();
+
+    ros::Rate loop_rate(10);
+    while (ros::ok()) {
+      ros::spinOnce();
+      if (std::abs(ros::Time::now().toSec() - latest_curr_time) >
+          check_time_interval) {
+        latest_curr_time = ros::Time::now().toSec();
+        CheckData(latest_lidar_time, latest_curr_time, "lidar");
+        CheckData(latest_frame_cam00_time, latest_curr_time, "frame_cam00");
+        CheckData(latest_frame_cam01_time, latest_curr_time, "frame_cam01");
+        CheckData(latest_imu_time, latest_curr_time, "imu");
+        CheckData(latest_gps_time, latest_curr_time, "gps");
+        CheckData(latest_gps_3dm_time, latest_curr_time, "gps_3dm");
       }
       loop_rate.sleep();
     }
