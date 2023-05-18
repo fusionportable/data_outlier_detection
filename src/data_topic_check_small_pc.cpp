@@ -106,8 +106,8 @@ int main(int argc, char** argv) {
           check_time_interval) {
         latest_curr_time = ros::Time::now().toSec();
         CheckData(latest_lidar_time, latest_curr_time, "lidar");
-        CheckData(latest_frame_cam00_time, latest_curr_time, "frame_cam00");
-        CheckData(latest_frame_cam01_time, latest_curr_time, "frame_cam01");
+        CheckData(latest_event_cam00_time, latest_curr_time, "event_cam00");
+        CheckData(latest_event_cam01_time, latest_curr_time, "event_cam01");
         CheckData(latest_imu_time, latest_curr_time, "imu");
       }
       loop_rate.sleep();
