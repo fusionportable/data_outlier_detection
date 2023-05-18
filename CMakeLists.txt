@@ -22,3 +22,9 @@ catkin_package(
 
 add_executable(data_topic_check_fp src/data_topic_check_fp.cpp)
 target_link_libraries(data_topic_check_fp ${catkin_LIBRARIES})
+
+add_executable(data_topic_check_big_pc src/data_topic_check_big_pc.cpp)
+target_link_libraries(data_topic_check_big_pc ${catkin_LIBRARIES})
+
+add_executable(data_topic_check_small_pc src/data_topic_check_small_pc.cpp)
+target_link_libraries(data_topic_check_small_pc ${catkin_LIBRARIES})
