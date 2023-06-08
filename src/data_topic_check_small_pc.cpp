@@ -105,7 +105,7 @@ int main(int argc, char** argv) {
     ros::Subscriber imu_sub =
         nh.subscribe<sensor_msgs::Imu>(topic4, 5, IMUCallback);
     ros::Subscriber encoder_sub =
-        nh.subscribe<sensor_msgs::JointState>(topic4, 5, EncoderCallback);
+        nh.subscribe<sensor_msgs::JointState>(topic5, 5, EncoderCallback);
 
     double latest_curr_time = ros::Time::now().toSec();
 
