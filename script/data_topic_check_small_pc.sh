@@ -8,4 +8,5 @@ rosrun data_outlier_detection data_topic_check_small_pc \
   /os_cloud_node/points \
   /stereo/davis_left/image_raw/compressed \
   /stereo/davis_right/image_raw/compressed \
-  /3dm_ins/imu/data_raw
+  /3dm_ins/imu/data_raw \
+  /mini_hercules/encoder 
